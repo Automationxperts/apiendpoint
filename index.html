@@ -22,23 +22,23 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .custom-table thead th {
-            background-color: #4a5568;  /* Darker header background */
-            color: #f7fafc;         /* Lighter header text */
+            background-color: #4a5568;
+            color: #f7fafc;
             padding: 0.75rem 1rem;
             text-align: left;
             font-weight: 600;
-            border-bottom: 2px solid #718096; /* Darker header border */
+            border-bottom: 2px solid #718096;
         }
         .custom-table tbody td {
             padding: 0.75rem 1rem;
-            color: #f7fafc;         /* Lighter data text */
-            border-bottom: 1px solid #4a5568; /* Darker data border */
+            color: #f7fafc;
+            border-bottom: 1px solid #4a5568;
         }
         .custom-table tbody tr:last-child td {
             border-bottom: none;
         }
         .custom-table tbody tr:hover {
-            background-color: #2d3748; /* Slightly lighter hover background */
+            background-color: #2d3748;
         }
         .error-message {
             color: #e53e3e;
@@ -50,8 +50,12 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 p-6"> <div class="container max-w-4xl mx-auto bg-gray-800 shadow-md rounded-lg p-8"> <h1 class="text-2xl font-semibold text-white mb-6 text-center">Data from JSON File</h1> <div id="data-container" class="mt-8">
-            <p class="text-gray-400 text-center">Loading data...</p> </div>
+<body class="bg-gray-900 p-6">
+    <div class="container max-w-4xl mx-auto bg-gray-800 shadow-md rounded-lg p-8">
+        <h1 class="text-2xl font-semibold text-white mb-6 text-center">Data from JSON File</h1>
+        <div id="data-container" class="mt-8">
+            <p class="text-gray-400 text-center">Loading data...</p>
+        </div>
     </div>
 
     <script>
@@ -74,8 +78,9 @@
             })
             .then(data => {
                 // Get the filter parameter from the URL
-                const filterField = Object.keys(Object.fromEntries(new URLSearchParams(window.location.search)))[0];
-                const filterValue = getUrlParameter(filterField);
+                const urlParams = new URLSearchParams(window.location.search);
+                const filterField = Object.keys(Object.fromEntries(urlParams))[0];
+                const filterValue = filterField ? getUrlParameter(filterField) : null; //changed the logic here
 
                 if (!filterField || !filterValue) {
                     // Display the first entry if no URL parameters are provided
@@ -108,18 +113,18 @@
                         dataContainer.innerHTML = '';
                         dataContainer.appendChild(table);
                     } else {
-                        dataContainer.innerHTML = '<p class="text-gray-400 text-center">No data found in the JSON file.</p>'; // Lighter message
+                        dataContainer.innerHTML = '<p class="text-gray-400 text-center">No data found in the JSON file.</p>';
                     }
-                    return; // Exit the function
+                    return;
                 }
 
                 // Perform the filtering
                 const filteredData = data.filter(item => {
                     const itemValue = item[filterField];
                     if (typeof itemValue === 'string') {
-                       return itemValue.toLowerCase() === filterValue.toLowerCase();
-                   }
-                   return itemValue === filterValue;
+                        return itemValue.toLowerCase() === filterValue.toLowerCase();
+                    }
+                    return itemValue === filterValue;
                 });
 
                 if (filteredData.length > 0) {
@@ -154,7 +159,7 @@
                     dataContainer.innerHTML = '';
                     dataContainer.appendChild(table);
                 } else {
-                    dataContainer.innerHTML = `<p class="text-gray-400 text-center">No data found matching the filter: <strong>${filterField} = ${filterValue}</strong></p>`; // Lighter message
+                    dataContainer.innerHTML = `<p class="text-gray-400 text-center">No data found matching the filter: <strong>${filterField} = ${filterValue}</strong></p>`;
                 }
             })
             .catch(error => {
